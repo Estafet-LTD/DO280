@@ -23,10 +23,10 @@ spec:
           limits:
             memory: "128Mi"
             cpu: '0.5'
-        image: 'quay.io/redhattraining/php-ssl:v1.1'
+        image: 'IMAGE_LOCATION_HERE'
         name: php-https
         ports:
-        - containerPort: 8443
+        - containerPort: CONTAINER PORT NUMBER HERE
           name: php-https
         volumeMounts:
         - name: tls-certs
@@ -35,7 +35,7 @@ spec:
       volumes:
       - name: tls-certs
         secret:
-          secretName: php-certs
+          secretName: TLS SECRET NAME HERE
 ---
 apiVersion: v1
 kind: Service

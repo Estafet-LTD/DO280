@@ -26,7 +26,7 @@ spec:
         image: 'IMAGE_LOCATION_HERE'
         name: php-http
         ports:
-        - containerPort: PORT NUMBER HERE
+        - containerPort: CONTAINER PORT NUMBER HERE
           name: php-http
 ---
 apiVersion: v1
