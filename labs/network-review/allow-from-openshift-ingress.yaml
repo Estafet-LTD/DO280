@@ -1,0 +1,12 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-from-openshift-ingress
+spec:
+  ingress:
+  - from:
+    - namespaceSelector:
+        CONFIGURE THE NAMESPACE SELECTOR HERE
+  podSelector: CONFIGURE THE POD SELECTOR HERE
+  policyTypes:
+  - Ingress
