@@ -50,4 +50,5 @@ $ openssl x509 \
 # 2. The CSR, training.csr
 # 3. The public certificate, training.crt
 
-You can use "openssl x509 -in certs/training.crt -noout -text" to view the certificate's details.
+You can use "openssl x509 -in certs/training.crt -noout -text" to view the certificate's details, and
+"openssl req -in certs/training.csr -noout -text" to view the CSR's details.
