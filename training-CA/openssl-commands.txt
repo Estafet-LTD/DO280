@@ -5,25 +5,27 @@ $ set OC_DOMAIN_NAME="$(oc -n openshift-ingress-operator get ingresscontroller/d
 $ echo "${OC_DOMAIN_NAME}"
 apps.openshift.nyx.lab.local
 
-# Change to the lab's working directory, e.g. "chapter_5/network_review" for the networking lab
-# and create the certs diretcory.
-cd chapter_5/network_review && mkdir certs
+# Change to the lab's working directory, e.g. "chapter-5/network-review" for the network-review lab
+# and create the certs directory.
+cd chapter5/network-review && mkdir certs
 
-# Run the following command to create a private key
+# Generating a TLS certiifcate consists of three steps:
+
+# 1. Run the following command to create a private key
 $ openssl genrsa -out ./certs/training.key 2048
 
-# Run the following command to generate a CSR for the private key.
+# 2. Run the following command to generate a CSR for the private key.
+#
+#    The fields in the subject (-subj) can be whatever you like.
+#
+#    The route DNS name is "<route name>.${OC_DOMAIN_NAME}", e.g. "php-https.api.openshift.nyx.lab.local"
 $ openssl req -new \
 -key certs/training.key \
 -out certs/training.csr \
 -subj "/C=GB/ST=Surrey/L=Surbiton/O=Estafet Ltd/OU=Training/CN=apps-crc.testing"
--addext "subjectAltName = DNS:<route host name>"
+-addext " = DNS:<route DNS name>"
 
-# The DO280 GitHub repository is in the DO280 directory. Set the TRAINING_CA_DIR environment variable to
-# the absolute path to that diretcory, e.g.:
-TRAINING_CA_DIR=$(readlink -e ../../DO280/training-CA/)
-
-# Run the following command to generate a certificate from the CSR
+# 3. Run the following command to generate a certificate from the CSR
 $ openssl x509 \
 -copy_extensions copy \
 -ext subjectAltName \
@@ -36,3 +38,9 @@ $ openssl x509 \
 -out certs/training.crt \
 -days 1650 \
 -sha256
+
+# At the end of these steps, the certs directory should have three files:
+#
+# 1. The private key, training.key
+# 2. The CSR, training.csr
+# 3. The public certificate, training.crt
