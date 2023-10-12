@@ -1,15 +1,18 @@
-# log in to your cluster as a cluser-admin user.
+# Before start a lab:
 
-# Get the default cluster domain name:
-$ set OC_DOMAIN_NAME="$(oc -n openshift-ingress-operator get ingresscontroller/default -o jsonpath='{.status.domain}{"\n"}')"
+# 1. Log in to your cluster as a cluster-admin user.
+
+# 2. Get the default cluster domain name:
+$ set OC_DOMAIN_NAME="$(oc -n openshift-ingress-operator get ingresscontroller/default \
+ -o jsonpath='{.status.domain}{"\n"}')"
 $ echo "${OC_DOMAIN_NAME}"
-apps.openshift.nyx.lab.local
+  apps.openshift.nyx.lab.local
 
-# Change to the lab's working directory, e.g. "chapter-5/network-review" for the network-review lab
-# and create the certs directory.
-cd chapter5/network-review && mkdir certs
+# 3. Change to the lab's working directory, e.g. "chapter-5/network-review" for the network-review lab
+#    and create the certs directory.
+$ cd chapter5/network-review && mkdir certs
 
-# Generating a TLS certiifcate consists of three steps:
+# In the lab, generating a TLS certiifcate consists of three steps:
 
 # 1. Run the following command to create a private key
 $ openssl genrsa -out ./certs/training.key 2048
@@ -18,7 +21,9 @@ $ openssl genrsa -out ./certs/training.key 2048
 #
 #    The fields in the subject (-subj) can be whatever you like.
 #
-#    The route DNS name is "<route name>.${OC_DOMAIN_NAME}", e.g. "php-https.api.openshift.nyx.lab.local"
+#    If a route is created with a specified hostname (via the --hostname argument), the route
+#    DNS name is the value of the hostname aregument. For example: "<route name>.${OC_DOMAIN_NAME}".
+#    Othewise, the route DNS name will be "<route name>-<namespace name>.${OC_DOMAIN_NAME}".
 $ openssl req -new \
 -key certs/training.key \
 -out certs/training.csr \
@@ -39,8 +44,10 @@ $ openssl x509 \
 -days 1650 \
 -sha256
 
-# At the end of these steps, the certs directory should have three files:
+# At the end of these steps, the certs directory should have these three files:
 #
 # 1. The private key, training.key
 # 2. The CSR, training.csr
 # 3. The public certificate, training.crt
+
+You can use "openssl x509 -in certs/training.crt -noout -text" to view the certificate's details.
