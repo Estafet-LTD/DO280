@@ -4,33 +4,35 @@
 
 # 2. Get the default cluster domain name:
 $ set OC_DOMAIN_NAME="$(oc -n openshift-ingress-operator get ingresscontroller/default \
- -o jsonpath='{.status.domain}{"\n"}')"
-$ echo "${OC_DOMAIN_NAME}"
+ -o jsonpath='{.status.domain}')"
+$ echo -e "${OC_DOMAIN_NAME}\n"
   apps.openshift.nyx.lab.local
 
-# 3. Change to the lab's working directory, e.g. "chapter-5/network-review" for the network-review lab
+# 3. Change to the lab's working directory, e.g. "chapter5/network-review" for the network-review lab
 #    and create the certs directory.
 $ cd chapter5/network-review && mkdir certs
 
 # In the lab, generating a TLS certiifcate consists of three steps:
 
-# 1. Run the following command to create a private key
+# 1. Run the following command to create a private key:
 $ openssl genrsa -out ./certs/training.key 2048
 
-# 2. Run the following command to generate a CSR for the private key.
+# 2. 
 #
-#    The fields in the subject (-subj) can be whatever you like.
+# The fields in the subject (-subj) can be whatever you like.
 #
-#    If a route is created with a specified hostname (via the --hostname argument), the route
-#    DNS name is the value of the hostname aregument. For example: "<route name>.${OC_DOMAIN_NAME}".
-#    Othewise, the route DNS name will be "<route name>-<namespace name>.${OC_DOMAIN_NAME}".
+# If a route is created with a specified hostname (via the --hostname argument), the route
+# DNS name is the value of the hostname aregument. For example: "<route name>.${OC_DOMAIN_NAME}".
+# Otherwise, the route DNS name will be "<route name>-<namespace name>.${OC_DOMAIN_NAME}".
+# 
+# Run the following command to generate a CSR for the private key:
 $ openssl req -new \
 -key certs/training.key \
 -out certs/training.csr \
--subj "/C=GB/ST=Surrey/L=Surbiton/O=Estafet Ltd/OU=Training/CN=apps-crc.testing"
--addext " = DNS:<route DNS name>"
+-subj "/C=GB/ST=Surrey/L=Surbiton/O=Estafet Ltd/OU=Training/CN=apps-crc.testing" \
+-addext "subjectAltName = DNS:<route DNS name>"
 
-# 3. Run the following command to generate a certificate from the CSR
+# 3. Run the following command to generate a certificate from the CSR:
 $ openssl x509 \
 -copy_extensions copy \
 -ext subjectAltName \
